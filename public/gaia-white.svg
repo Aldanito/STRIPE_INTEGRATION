@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180.5 90">
+<defs>
+
+<path id="gl_G" d=" M50,21 c-2,-5 -6,-15 -24,-15 s-26,18 -26,30 s6.5,28 23,29 s18.5,-4.75 20.5,-7 l2,7 l4.75,0 l0,-29.5 l-23.5,0 l0,6 l15.5,0 l0,3 c0,12 -10,15 -16,15 s-16.5,-5 -17.5,-20 s4,-28 20,-27 c10,1 12.5,6 14,10 "/>
+<path id="gl_I" d=" M122,7.5 h7.5 v56.5 h-7.5Z "/>
+<path id="gl_A" d=" M153,7.5 l7,0 l20.5,56.5 l-8,0 l-6,-16.5 l-21.5,0 l-6,16.5 l-7,0Z M156.25,18 l-8.5,24 l17,0Z "/>
+
+<path id="gl_M" d="m 6 10.5 h11 l13.95 37.4 l14 -37.4 h11.1 v54.6 h-7.25 v-48 l-14 37.5 h-7.5 l-14.1 -37.5 v48 h-7.2z" />
+<path id="gl_a" d="m3.5 25.9 c5 -2 10 -3 15 -2.75 c15 .25 16.6 12 16.6 17 v24.9 h-6.75 v-6.25 c-5 8 -12.5 7.25 -15 7.25 c-9.5 0 -13 -8 -12.75 -12 c-1 -13.25 11 -14.9 19 -14.9 h8.9 c0 -12.5 -15 -12.25 -25 -7 z m25 18.5 h-5 c-8.25 0 -16.25 0 -16.25 8 c0 4 2.5 7.75 8 8 c9 .5 13.25 -6.5 13.25 -15.5"/>
+<path id="gl_e" d="m.2 44 c0 -13 8.25 -21 20 -21 c6 0 18 2.25 18 21 v2.25 h-31 c1 13.75 13 18.25 29.3 10.3 v6.5 c-19 8 -36 0 -36.25 -16 m7.2 -6.25 h24 c-.25 -17 -23.75 -15 -24 0"/>
+<g id="gl_i"><rect y="8" width="6.8" height="8.5"/><rect y="24" width="6.8" height="41"/></g>
+<path id="gl_n" d="m2.75 24 h6.8 v6.5 c3.75 -5.75 8 -7.5 13.5 -7.5 c2.75 0 14.1 0 14.1 17.5 v24.5 h-6.8 v-24.5 c0 -8 -3 -11.5 -9 -11.5 c-7.25 0 -11.75 5 -11.75 12 v24 h-6.8"/>
+<path id="gl_r" d="m8.75 24 h6.75 v6.5 c4.5 -7.5 12 -8.25 17.25 -7 v6.75 c-10 -4 -16.75 2 -17.25 12v22.75 h-6.75z"/>
+<path id="gl_s" d="m35.25 31.5 c-10 -4.75 -22.5 -3.5 -22.25 3 c-.25 10.5 25.5 2.5 24.3 20 c-1 13.75 -20 13 -31.25 9 v-7 c18 8.5 24.5 1.5 24.3 -2 c.5 -11.75 -24 -2 -24 -20 c.25 -13 18 -13.25 29 -9.25"/>
+<path id="gl_t" d="m4, 24 h5 v-11.6 h6.75 v11.6 h13.9 v5.25 h-13.9 v24 c.25 7 5 6 8 6.2 h5.8 v5.5 h-5 c-13 0 -14.75 -2.75 -15.5 -11.5 v-24.25 h-5"/>
+</defs>
+<use href="#gl_G" fill="white" stroke="none" transform="matrix(0.955 0 0 0.955 0 1.85)"/>
+<path fill="white" d="M 85,36.5 l-9,18 l36,0 l-27 -54 -35 70 70 0 -4 -8 -53 0 22 -44 14,28 -9,0Z"/>
+<use href="#gl_I" fill="white" stroke="none"/>
+<use href="#gl_A" fill="white" stroke="none"/>
+
+<use href="#gl_M" fill="white" stroke="none" transform="matrix(.15 0 0 .15 53 74)"/>
+<use href="#gl_i" fill="white" stroke="none" transform="matrix(.15 0 0 .15 63.4 74)"/>
+<use href="#gl_n" fill="white" stroke="none" transform="matrix(.15 0 0 .15 66 74)"/>
+<use href="#gl_e" fill="white" stroke="none" transform="matrix(.15 0 0 .15 73 74)"/>
+<use href="#gl_s" fill="white" stroke="none" transform="matrix(.15 0 0 .15 78.8 74)"/>
+<use href="#gl_M" fill="white" stroke="none" transform="matrix(.15 0 0 .15 90.5 74)"/>
+<use href="#gl_a" fill="white" stroke="none" transform="matrix(.15 0 0 .15 100.4 74)"/>
+<use href="#gl_t" fill="white" stroke="none" transform="matrix(.15 0 0 .15 106.3 74)"/>
+<use href="#gl_t" fill="white" stroke="none" transform="matrix(.15 0 0 .15 110.6 74)"/>
+<use href="#gl_e" fill="white" stroke="none" transform="matrix(.15 0 0 .15 115.85 74)"/>
+<use href="#gl_r" fill="white" stroke="none" transform="matrix(.15 0 0 .15 121.8 74)"/>
+
+<path stroke="white" d="M6 80 h41"/>
+<path stroke="white" d="M133.5 80 h41"/>
+</svg>
