@@ -23,17 +23,33 @@ export const createPortalSession = async ({ customerId }: { customerId: string }
     return JSON.parse(JSON.stringify(portalSession));
 };
 
-export const createCheckoutSession = async ({ userId, email, priceId, subscription }: { userId: number, email: string, priceId: string, subscription: string }) => {
+export const createCheckoutSession = async ({ email, priceId, subscription }: { email: string, priceId: string, subscription: string }) => {
     try {
+        const customers = await stripe.customers.list({ email });
+        let customerId: string;
+
+        if (customers.data.length > 0) {
+            customerId = customers.data[0].id;
+
+        } else {
+            const customerParams: Stripe.CustomerCreateParams = {
+                email,
+                // metadata: { userId: userId.toString() },
+            };
+
+            const newCustomer = await stripe.customers.create(customerParams);
+            customerId = newCustomer.id;
+        }
+
         const session = await stripe.checkout.sessions.create({
+            customer: customerId,
             payment_method_types: ["card"],
             line_items: [{ price: priceId, quantity: 1 }],
-            metadata: { userId, email, subscription },
+            metadata: {  subscription },
             mode: "subscription",
             success_url: `${BASE_URL}/paymentStatus?status=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${BASE_URL}/paymentStatus?status=cancel`,
             allow_promotion_codes: true,
-            customer_email: email
         });
 
         return JSON.parse(JSON.stringify(session));
@@ -42,4 +58,4 @@ export const createCheckoutSession = async ({ userId, email, priceId, subscripti
         console.error("Error creating checkout session:", error);
         throw error;
     }
-}
+};
