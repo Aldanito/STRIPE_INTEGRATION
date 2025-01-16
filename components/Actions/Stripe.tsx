@@ -50,6 +50,8 @@ export const createCheckoutSession = async ({ email, priceId, subscription }: { 
             customerId = newCustomer.id;
         }
 
+        await addCustomerToBase({ customerId, email });
+
         const session = await stripe.checkout.sessions.create({
             customer: customerId,
             payment_method_types: ["card"],

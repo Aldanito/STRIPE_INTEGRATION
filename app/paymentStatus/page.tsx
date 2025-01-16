@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { addCustomerToBase, createPortalSession, getCustomer } from '@/components/Actions/Stripe';
+import { createPortalSession, getCustomer } from '@/components/Actions/Stripe';
 
 export default function PaymentStatus() {
     const searchParams = useSearchParams();
@@ -16,7 +16,6 @@ export default function PaymentStatus() {
                 if (!session) return;
                 const customer = await getCustomer({ sessionId: session });
                 const result = await createPortalSession({ customerId: customer.customer as string });
-                await addCustomerToBase({ customerId: customer.customer, email: customer.customer_details.email })
                 setPortalUrl(result.url);
             } catch (error) {
                 console.error(error);
