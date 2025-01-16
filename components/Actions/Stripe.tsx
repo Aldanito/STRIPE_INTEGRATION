@@ -1,11 +1,20 @@
 'use server'
 import Stripe from 'stripe';
+import mariadb from 'mariadb'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
     apiVersion: '2024-12-18.acacia',
 });
 
 const BASE_URL = process.env.BASE_URL as string;
+
+const pool = mariadb.createPool({
+    host: process.env.DATABASE_HOST,
+    port: Number(process.env.DATABASE_PORT),
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+});
 
 export const getCustomer = async ({ sessionId }: { sessionId: string }) => {
     const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
@@ -45,7 +54,7 @@ export const createCheckoutSession = async ({ email, priceId, subscription }: { 
             customer: customerId,
             payment_method_types: ["card"],
             line_items: [{ price: priceId, quantity: 1 }],
-            metadata: {  subscription },
+            metadata: { subscription },
             mode: "subscription",
             success_url: `${BASE_URL}/paymentStatus?status=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${BASE_URL}/paymentStatus?status=cancel`,
@@ -55,7 +64,22 @@ export const createCheckoutSession = async ({ email, priceId, subscription }: { 
         return JSON.parse(JSON.stringify(session));
 
     } catch (error) {
-        console.error("Error creating checkout session:", error);
         throw error;
     }
 };
+
+export const addCustomerToBase = async ({ customerId, email }: { customerId: string, email: string }) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(`
+            UPDATE users
+            SET stripe_id = '${customerId}'
+            WHERE email = '${email}';
+        `);
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.end();
+    }
+}

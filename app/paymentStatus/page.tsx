@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { createPortalSession, getCustomer } from '@/components/Actions/Stripe';
+import { addCustomerToBase, createPortalSession, getCustomer } from '@/components/Actions/Stripe';
 
 export default function PaymentStatus() {
     const searchParams = useSearchParams();
@@ -16,8 +16,8 @@ export default function PaymentStatus() {
                 if (!session) return;
                 const customer = await getCustomer({ sessionId: session });
                 const result = await createPortalSession({ customerId: customer.customer as string });
+                await addCustomerToBase({ customerId: customer.customer, email: customer.customer_details.email })
                 setPortalUrl(result.url);
-                console.log(result);
             } catch (error) {
                 console.error(error);
             }
@@ -35,7 +35,7 @@ export default function PaymentStatus() {
                             <a href="/" className="inline-flex text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-red-900 my-4">Return to Main Page</a>
                         </>
                     ) : (
-                           <>
+                        <>
                             <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-green-500 dark:text-green-500">Success</h1>
                             <p className="mb-4 text-3xl tracking-tight font-bold text-gray-200 md:text-4xl dark:text-white">Subscription successfully completed.</p>
                             <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
@@ -51,3 +51,4 @@ export default function PaymentStatus() {
         </section>
     );
 }
+
