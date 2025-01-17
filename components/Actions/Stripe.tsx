@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
     apiVersion: '2024-12-18.acacia',
 });
 
-const BASE_URL = process.env.BASE_URL as string;
+const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.PROD_BASE_URL as string : process.env.BASE_URL as string;
 
 const pool = mariadb.createPool({
     host: process.env.DATABASE_HOST,
@@ -32,14 +32,18 @@ export const createPortalSession = async ({ customerId }: { customerId: string }
     return JSON.parse(JSON.stringify(portalSession));
 };
 
-export const createCheckoutSession = async ({ email, priceId, subscription }: { email: string, priceId: string, subscription: string }) => {
+export const createCheckoutSession = async ({ priceId, subscription, userId }: { priceId: string, subscription: string, userId: string }) => {
     try {
+        if (!userId) {
+            throw new Error('User ID not found in URL');
+        }
+
+        const email = await getUserEmailById(userId);
         const customers = await stripe.customers.list({ email });
         let customerId: string;
 
         if (customers.data.length > 0) {
             customerId = customers.data[0].id;
-
         } else {
             const customerParams: Stripe.CustomerCreateParams = {
                 email,
@@ -63,9 +67,11 @@ export const createCheckoutSession = async ({ email, priceId, subscription }: { 
             allow_promotion_codes: true,
         });
 
-        return JSON.parse(JSON.stringify(session));
-
+        return {
+            url: session.url,
+        };
     } catch (error) {
+        console.error(error);
         throw error;
     }
 };
@@ -74,7 +80,7 @@ export const addCustomerToBase = async ({ customerId, email }: { customerId: str
     let conn;
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query(`
+        await conn.query(`
             UPDATE users
             SET stripe_id = '${customerId}'
             WHERE email = '${email}';
@@ -82,6 +88,28 @@ export const addCustomerToBase = async ({ customerId, email }: { customerId: str
     } catch (err) {
         throw err;
     } finally {
-        if (conn) conn.end();
+        if (conn) await conn.release(); 
     }
 }
+
+export const getUserEmailById = async (userId: string) => {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const rows = await conn.query(`
+              SELECT email
+              FROM users
+              WHERE id = '${userId}';
+          `);
+      if (rows.length > 0) {
+        console.log(rows[0].email);
+        return rows[0].email;
+      } else {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+    } catch (err) {
+      throw err;
+    } finally {
+        if (conn) await conn.release();
+    }
+  };
