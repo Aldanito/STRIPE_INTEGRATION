@@ -77,6 +77,7 @@ export const addCustomerToBase = async ({ customerId, email }: { customerId: str
             SET stripe_id = '${customerId}'
             WHERE email = '${email}';
         `);
+
     } catch (err) {
         throw err;
     } finally {
