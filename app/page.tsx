@@ -1,10 +1,10 @@
-import Payment from "@/components/Payment/Payment";
-
+import { SubscriptionPlan } from "@/src/widgets/SubscriptionPlan/ui/SubscriptionPlan";
 
 export default function Home() {
+
   return (
     <div>
-      <Payment />
+      <SubscriptionPlan />
     </div>
   );
 }
