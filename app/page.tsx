@@ -1,6 +1,7 @@
 import { SubscriptionPlan } from "@/src/widgets/SubscriptionPlan/ui/SubscriptionPlan";
+import { Suspense } from "react";
 
-export default function Home() {
+function HomePage() {
 
   return (
     <div>
@@ -8,3 +9,12 @@ export default function Home() {
     </div>
   );
 }
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomePage />
+    </Suspense>
+  );
+}
+

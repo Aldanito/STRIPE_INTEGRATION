@@ -3,9 +3,9 @@
 import { getStripeInvoice } from "@/src/entities/invoice";
 import Link from "next/link";
 import { useQueryState } from "nuqs";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-export default function Page() {
+function SubscriptionUpdateInfoPage() {
     const [invoiceId] = useQueryState('invoice')
     const [invoiceData, setInvoiceData] = useState<{ invoiceUrl: string, invoicePdf: string } | null>(null)
 
@@ -47,4 +47,13 @@ export default function Page() {
             </div>
         </section>
     );
+}
+
+
+export default function SubscriptionUpdateInfo() {
+    return (
+        <Suspense>
+            <SubscriptionUpdateInfoPage />
+        </Suspense>
+    )
 }
