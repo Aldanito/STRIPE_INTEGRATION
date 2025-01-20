@@ -2,7 +2,6 @@ import { SubscriptionPlan } from "@/src/widgets/SubscriptionPlan/ui/Subscription
 import { Suspense } from "react";
 
 function HomePage() {
-
   return (
     <div>
       <SubscriptionPlan />
@@ -17,4 +16,3 @@ export default function Home() {
     </Suspense>
   );
 }
-

@@ -1,1 +1,1 @@
-export * from './ui/UpdateSubscriptionModal'
+export * from "./ui/UpdateSubscriptionModal";

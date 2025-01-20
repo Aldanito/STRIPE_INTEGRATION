@@ -20,6 +20,9 @@ export const createCheckoutSession = async ({
         }
 
         const user = await getUserById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
         const customers = await stripe.customers.list({ email: user.email });
         let customerId: string;
 
@@ -43,8 +46,8 @@ export const createCheckoutSession = async ({
             line_items: [{ price: priceId, quantity: 1 }],
             metadata: { subscription },
             mode: "subscription",
-            success_url: `${BASE_URL}/paymentStatus?status=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${BASE_URL}/paymentStatus?status=cancel`,
+            success_url:  `${BASE_URL}/subscription-activate-info`,
+            cancel_url:  `${BASE_URL}/subscription-activate-info`,
             allow_promotion_codes: true,
         });
 

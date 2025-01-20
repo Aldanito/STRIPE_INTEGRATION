@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -7,19 +6,6 @@ import { Suspense } from "react";
 function PaymentStatusContent() {
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
-
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const session = searchParams.get("session_id");
-  //       if (!session) return;
-  //       const customer = await getCustomer({ sessionId: session });
-  //       await createPortalSession({ customerId: customer.customer as string });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   })();
-  // }, [searchParams]);
 
   return (
     <section className="bg-gray-900 dark:bg-gray-900 min-h-screen flex flex-col justify-center">

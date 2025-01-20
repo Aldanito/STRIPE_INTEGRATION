@@ -1,13 +1,14 @@
-import { useState } from "react"
+import { useState } from "react";
 
-export const useModal = (): { open: boolean, toggle: () => void } => {
-    const [open, setOpen] = useState<boolean>(false)
+export const useModal = (): { open: boolean; toggle: () => void } => {
+  const [open, setOpen] = useState<boolean>(false);
 
-    const toggle = () => {
-        setOpen((prev) => !prev)
-    }
+  const toggle = () => {
+    setOpen((prev) => !prev);
+  };
 
-    return {
-        open, toggle
-    }
-}
+  return {
+    open,
+    toggle,
+  };
+};
