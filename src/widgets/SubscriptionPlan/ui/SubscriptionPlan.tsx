@@ -39,7 +39,6 @@ export const SubscriptionPlan = () => {
     try {
       const response = await createCheckoutSession({
         priceId: priceId,
-        subscription: "",
         userId: userId,
       });
       if (response?.url) {

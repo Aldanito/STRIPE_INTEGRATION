@@ -7,11 +7,9 @@ import Stripe from "stripe";
 
 export const createCheckoutSession = async ({
     priceId,
-    subscription,
     userId,
 }: {
     priceId: string;
-    subscription: string;
     userId: string;
 }) => {
     try {
@@ -44,9 +42,8 @@ export const createCheckoutSession = async ({
             customer: customerId,
             payment_method_types: ["card"],
             line_items: [{ price: priceId, quantity: 1 }],
-            metadata: { subscription },
             mode: "subscription",
-            success_url:  `${BASE_URL}/subscription-activate-info`,
+            success_url:  `${BASE_URL}/subscription-activate-info?invoice={CHECKOUT_SESSION_ID}`,
             cancel_url:  `${BASE_URL}/subscription-activate-info`,
             allow_promotion_codes: true,
         });

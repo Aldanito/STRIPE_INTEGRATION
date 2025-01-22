@@ -17,7 +17,6 @@ function SubscriptionUpdateInfoPage() {
       if (invoiceId) {
         const { invoicePdf, invoiceUrl } = await getStripeInvoice(invoiceId);
         setInvoiceData({ invoicePdf, invoiceUrl });
-        console.log({ invoicePdf, invoiceUrl });
       }
     })();
   }, [invoiceId]);
