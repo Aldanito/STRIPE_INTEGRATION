@@ -22,6 +22,9 @@ export const SubscriptionPlan = () => {
   const [userId, setUserId] = useState<string>("");
   const [customerId, setCustomerId] = useState<string>("");
   const [currentPlan, setCurrentPlan] = useState<null | string>(null);
+  const [currentPlanInterval, setCurrentPlanInterval] = useState<null | string>(
+    null
+  );
   const searchParams = useSearchParams();
   const { open, toggle } = useModal();
   const [selectedPlan, setSelectedPlan] = useState<null | {
@@ -107,6 +110,7 @@ export const SubscriptionPlan = () => {
           subscription.status === "active"
         ) {
           setCurrentPlan(subscription.plan.id);
+          setCurrentPlanInterval(subscription.plan.interval);
         }
       }
       setInit(false);
@@ -123,17 +127,14 @@ export const SubscriptionPlan = () => {
               Subscribe
             </h2>
             <h2 className="mb-5 font-light text-gray-300 sm:text-xl dark:text-gray-400">
-              Welcome to GAIA&apos;s subscription plans. Choose the best plan
-              that suits your needs and join us in making sustainable mining a
-              reality. Empower your operations with our innovative solutions and
-              be a part of the change.
+              Join the Mines Matter movement and bridge the energy metals’ gap
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-8 w-full">
+          <div className="grid grid-cols-2 gap-8 w-full">
             {planList.map((item) => (
               <div
                 key={item.id}
-                className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-300 bg-gray-800 rounded-lg border border-gray-700 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white"
+                className="flex flex-col justify-between h-full p-6 max-w-lg text-center text-gray-300 bg-gray-800 rounded-lg border border-gray-700 shadow-lg transition-transform duration-500 hover:scale-105 hover:shadow-2xl"
               >
                 <h3 className="mb-4 text-2xl font-semibold">{item.title}</h3>
                 <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
@@ -141,69 +142,84 @@ export const SubscriptionPlan = () => {
                 </p>
                 <div className="flex justify-center items-baseline my-8">
                   <span className="mr-2 text-5xl font-extrabold">
-                    ${item.price}
+                    ${item.price} HKD
                   </span>
                   <span className="text-gray-500 dark:text-gray-400">
-                    /month
+                    /{item.title === "Yearly" ? "year" : "month"}
                   </span>
                 </div>
-                <button
-                  className={`
-                  inline-flex items-center justify-center
-                  ${
-                    item.id === currentPlan
-                      ? "cursor-not-allowed bg-gray-500"
-                      : "bg-green-600 hover:bg-green-800 "
-                  }
-                  text-white 
-                  focus:ring-4 focus:outline-none focus:ring-green-300 
-                  font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                  dark:focus:ring-green-900 transition duration-300 
-                  ease-in-out transform hover:scale-105 
-                  `}
-                  onClick={() =>
-                    currentPlan
-                      ? selectUpdatedPlan({
-                          priceId: item.id,
-                          price: item.price,
-                          title: item.title,
-                        })
-                      : paymentSubscribe(item.id)
-                  }
-                  type="button"
-                  disabled={
-                    loading === item.id || item.id === currentPlan || init
-                  }
-                >
-                  {loading === item.id || init ? (
-                    <svg
-                      className="animate-spin h-5 w-5 mr-3 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                  ) : item.id === currentPlan ? (
-                    "Current plan"
-                  ) : customerId ? (
-                    "Update plan"
-                  ) : (
-                    "Get started"
-                  )}
-                </button>
+                {item.title === "Yearly" && (
+                  <p className="text-green-500 font-semibold">
+                    Save 16% compared to monthly plan!
+                  </p>
+                )}
+                <div className="mt-auto">
+                  <button
+                    className={`
+                      inline-flex items-center justify-center w-full
+                      ${
+                        item.id === currentPlan ||
+                        (item.title === "Monthly" &&
+                          currentPlanInterval === "year")
+                          ? "cursor-not-allowed bg-gray-500"
+                          : "bg-green-600 hover:bg-green-800"
+                      }
+                      text-white 
+                      focus:ring-4 focus:outline-none focus:ring-green-300 
+                      font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                      transition duration-300 
+                    `}
+                    onClick={() =>
+                      currentPlan
+                        ? selectUpdatedPlan({
+                            priceId: item.id,
+                            price: item.price,
+                            title: item.title,
+                          })
+                        : paymentSubscribe(item.id)
+                    }
+                    type="button"
+                    disabled={
+                      loading === item.id ||
+                      item.id === currentPlan ||
+                      init ||
+                      (item.title === "Monthly" &&
+                        currentPlanInterval === "year")
+                    }
+                  >
+                    {loading === item.id || init ? (
+                      <svg
+                        className="animate-spin h-5 w-5 mr-3 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : item.id === currentPlan ? (
+                      "Current plan"
+                    ) : item.title === "Monthly" &&
+                      currentPlanInterval === "year" ? (
+                      "Unavailable"
+                    ) : currentPlan === null ? (
+                      "Get started"
+                    ) : (
+                      "Update plan"
+                    )}
+                  </button>
+                </div>
               </div>
             ))}
           </div>

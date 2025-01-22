@@ -1,21 +1,27 @@
-export const planList = [
+export const planList = process.env.NODE_ENV === 'production' ? [
     {
-        title: "Pro",
-        id: "price_1QWwfeFY45kZXORgSJMUYcXv",
-        price: 100,
-        description: "Ideal for professionals who need advanced features.",
+        title: "Monthly",
+        id: "price_1Qjpf5FY45kZXORguFCG5dA4",
+        price: 88,
+        description: "Leap into new horizons with Altiplano pro research.",
     },
     {
-        title: "Premium",
-        id: "price_1QWwg0FY45kZXORgjnHbTN7x",
-        price: 250,
-        description:
-            "Perfect for businesses that require premium support and features.",
+        title: "Yearly",
+        id: "price_1Qjpf5FY45kZXORgyMDWv9fV",
+        price: 888,
+        description: "Leap into new horizons with Altiplano pro research.",
+    },
+] : [
+    {
+        title: "Monthly",
+        id: "price_1QjtvyFY45kZXORgaYvoslxo",
+        price: 88,
+        description: "TEST Leap into new horizons with Altiplano pro research.",
     },
     {
-        title: "Enterprise",
-        id: "price_1QgcERITy1cFUw2yNArYFZ5p",
-        price: 1000,
-        description: "Best for large enterprises with extensive needs.",
+        title: "Yearly",
+        id: "price_1Qjtw8FY45kZXORgbWr01vRm",
+        price: 888,
+        description: " TEST Leap into new horizons with Altiplano pro research.",
     },
 ];
