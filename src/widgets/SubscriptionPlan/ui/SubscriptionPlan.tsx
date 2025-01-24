@@ -1,7 +1,9 @@
 "use client";
+
 import { createCheckoutSession } from "@/src/entities/checkout";
 import {
   getStripeSubscription,
+  removeStripeSubscription,
   updateStripeSubscription,
 } from "@/src/entities/subscription";
 import { getUserById } from "@/src/entities/user";
@@ -12,9 +14,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Stripe from "stripe";
 import { UpdateSubscriptionModal } from "../../UpdateSubscriptionModal";
+import { RemoveSubscriptionModal } from "../../RemoveSubscriptionModal";
 import { planList } from "../config";
 
 type Subscription = Stripe.Subscription & { plan: Stripe.Plan };
+
+type SelectedPlan = {
+  priceId: string;
+  title: string;
+  price: number;
+  endDate: string;
+};
 
 export const SubscriptionPlan = () => {
   const router = useRouter();
@@ -26,12 +36,9 @@ export const SubscriptionPlan = () => {
     null
   );
   const searchParams = useSearchParams();
-  const { open, toggle } = useModal();
-  const [selectedPlan, setSelectedPlan] = useState<null | {
-    priceId: string;
-    title: string;
-    price: number;
-  }>(null);
+  const { open: updateOpen, toggle: toggleUpdate } = useModal();
+  const { open: removeOpen, toggle: toggleRemove } = useModal();
+  const [selectedPlan, setSelectedPlan] = useState<null | SelectedPlan>(null);
   const [init, setInit] = useState<boolean>(true);
 
   const paymentSubscribe = async (priceId: string) => {
@@ -63,12 +70,32 @@ export const SubscriptionPlan = () => {
     title: string;
     price: number;
   }) => {
-    toggle();
-    setSelectedPlan(plan);
+    toggleUpdate();
+    setSelectedPlan({
+      ...plan,
+      endDate: new Date().toISOString().split("T")[0],
+    });
+  };
+
+  const selectCancelledPlan = (plan: {
+    priceId: string;
+    title: string;
+    price: number;
+  }) => {
+    toggleRemove();
+    setSelectedPlan({
+      ...plan,
+      endDate: new Date().toISOString().split("T")[0],
+    });
   };
 
   const cancelUpdatedPlan = () => {
-    toggle();
+    toggleUpdate();
+    setSelectedPlan(null);
+  };
+
+  const cancelRemovePlan = () => {
+    toggleRemove();
     setSelectedPlan(null);
   };
 
@@ -79,6 +106,21 @@ export const SubscriptionPlan = () => {
         priceId: selectedPlan.priceId,
       });
       router.push(`/subscription-update-info?invoice=${result.invoiceId}`);
+    }
+  };
+
+  const cancelSubscription = async () => {
+    if (currentPlan) {
+      try {
+        await removeStripeSubscription(customerId);
+        setCurrentPlan(null);
+        setTimeout(() => {
+          router.push(`/subsciption-cancelation-info`);
+        }, 2000);
+      } catch (error) {
+        toast.error("Error canceling subscription.");
+        console.error(error);
+      }
     }
   };
 
@@ -155,21 +197,27 @@ export const SubscriptionPlan = () => {
                 <div className="mt-auto">
                   <button
                     className={`
-                      inline-flex items-center justify-center w-full
-                      ${
-                        item.id === currentPlan ||
-                        (item.title === "Monthly" &&
-                          currentPlanInterval === "year")
-                          ? "cursor-not-allowed bg-gray-500"
-                          : "bg-green-600 hover:bg-green-800"
-                      }
-                      text-white 
-                      focus:ring-4 focus:outline-none focus:ring-green-300 
-                      font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                      transition duration-300 
-                    `}
+    inline-flex items-center justify-center w-full
+    ${
+      item.id === currentPlan
+        ? "bg-red-500 hover:bg-red-800"
+        : item.title === "Monthly" && currentPlanInterval === "year"
+        ? "bg-gray-500 cursor-not-allowed"
+        : "bg-green-600 hover:bg-green-800"
+    }
+    text-white 
+    focus:ring-4 focus:outline-none focus:ring-green-300 
+    font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+    transition duration-300 
+  `}
                     onClick={() =>
-                      currentPlan
+                      item.id === currentPlan
+                        ? selectCancelledPlan({
+                            priceId: item.id,
+                            price: item.price,
+                            title: item.title,
+                          })
+                        : currentPlan
                         ? selectUpdatedPlan({
                             priceId: item.id,
                             price: item.price,
@@ -180,7 +228,6 @@ export const SubscriptionPlan = () => {
                     type="button"
                     disabled={
                       loading === item.id ||
-                      item.id === currentPlan ||
                       init ||
                       (item.title === "Monthly" &&
                         currentPlanInterval === "year")
@@ -208,7 +255,7 @@ export const SubscriptionPlan = () => {
                         ></path>
                       </svg>
                     ) : item.id === currentPlan ? (
-                      "Current plan"
+                      "Cancel current subscription"
                     ) : item.title === "Monthly" &&
                       currentPlanInterval === "year" ? (
                       "Unavailable"
@@ -224,9 +271,16 @@ export const SubscriptionPlan = () => {
           </div>
         </div>
       </section>
+      <RemoveSubscriptionModal
+        open={removeOpen}
+        toggle={toggleRemove}
+        onCancel={cancelRemovePlan}
+        removeSubscription={cancelSubscription}
+        plan={selectedPlan}
+      />
       <UpdateSubscriptionModal
         plan={selectedPlan}
-        open={open}
+        open={updateOpen}
         toggle={cancelUpdatedPlan}
         onOk={updateSubscription}
         onCancel={cancelUpdatedPlan}

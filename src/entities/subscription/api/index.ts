@@ -12,7 +12,6 @@ export const getStripeSubscription = async ({ customerId }: { customerId: string
     }
 }
 
-
 export const updateStripeSubscription = async ({ customerId, priceId, }: { customerId: string, priceId: string }) => {
     try {
         const subscription = (await stripe.subscriptions.list({ customer: customerId, limit: 1, status: 'active' })).data[0];
@@ -34,3 +33,19 @@ export const updateStripeSubscription = async ({ customerId, priceId, }: { custo
         throw error;
     }
 }
+
+export const removeStripeSubscription = async (customerId: string): Promise<{ canceledAt: number }> => {
+    try {
+        const subscription = await getStripeSubscription({ customerId });
+        if (!subscription) {
+            throw new Error(`No active subscription found for customer ID: ${customerId}`);
+        }
+        const canceledSubscription = await stripe.subscriptions.cancel(subscription.id);
+        return {
+            canceledAt: canceledSubscription.canceled_at as number,
+        };
+    } catch (error) {
+        console.error("Error canceling subscription:", error);
+        throw error;
+    }
+};
