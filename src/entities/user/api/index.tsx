@@ -1,4 +1,5 @@
 "use server";
+import { format } from "date-fns";
 
 import { connectDatabase } from "@/src/shared/database/gaiaHubConnect";
 
@@ -47,6 +48,33 @@ export const editUser = async ({
             SET stripe_id = '${customerId}'
             WHERE email = '${email}';
         `);
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) await conn.release();
+    pool.end();
+  }
+};
+
+export const updateSubscriptionEndsAt = async ({
+  email,
+  subscriptionEndsAt,
+}: {
+  email: string;
+  subscriptionEndsAt: string | null;
+}): Promise<void> => {
+  const pool = connectDatabase();
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const formattedSubscriptionEndsAt = subscriptionEndsAt
+      ? `'${format(new Date(subscriptionEndsAt), "yyyy-MM-dd HH:mm:ss")}'`
+      : "NULL";
+    await conn.query(`
+      UPDATE users
+      SET trial_ends_at = ${formattedSubscriptionEndsAt}
+      WHERE email = '${email}';
+    `);
   } catch (err) {
     throw err;
   } finally {

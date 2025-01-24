@@ -3,6 +3,7 @@
 import { createCheckoutSession } from "@/src/entities/checkout";
 import {
   getStripeSubscription,
+  getStripeSubscriptionByEmail,
   removeStripeSubscription,
   updateStripeSubscription,
 } from "@/src/entities/subscription";
@@ -16,6 +17,7 @@ import Stripe from "stripe";
 import { UpdateSubscriptionModal } from "../../UpdateSubscriptionModal";
 import { RemoveSubscriptionModal } from "../../RemoveSubscriptionModal";
 import { planList } from "../config";
+import { updateSubscriptionEndsAt } from "@/src/entities/user";
 
 type Subscription = Stripe.Subscription & { plan: Stripe.Plan };
 
@@ -53,6 +55,20 @@ export const SubscriptionPlan = () => {
       } else {
         console.error("Checkout session URL is undefined");
       }
+
+      const customer = await getUserById(userId);
+      const subscription = await getStripeSubscriptionByEmail(
+        customer?.email || ""
+      );
+
+      const subscriptionEndDate = subscription?.current_period_end
+        ? new Date(subscription.current_period_end * 1000).toISOString()
+        : null;
+
+      await updateSubscriptionEndsAt({
+        email: customer?.email || "",
+        subscriptionEndsAt: subscriptionEndDate,
+      });
     } catch (error) {
       if (error instanceof TypeError && error.message === "Failed to fetch") {
         console.warn("Network error occurred, but redirecting anyway.");
@@ -114,9 +130,7 @@ export const SubscriptionPlan = () => {
       try {
         await removeStripeSubscription(customerId);
         setCurrentPlan(null);
-        setTimeout(() => {
-          router.push(`/subsciption-cancelation-info`);
-        }, 2000);
+        router.push(`/subsciption-cancelation-info`);
       } catch (error) {
         toast.error("Error canceling subscription.");
         console.error(error);
