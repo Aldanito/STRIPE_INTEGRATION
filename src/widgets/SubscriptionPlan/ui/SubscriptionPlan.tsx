@@ -86,13 +86,13 @@ export const SubscriptionPlan = () => {
     (async () => {
       const userId = searchParams.get("user_id") || "";
       if (!userId) {
-        window.location.href = "https://gaiamine.com/login";
+        window.location.href = "https://gaiamine.com/login?redirect=checkout";
         return;
       }
 
       const user = await getUserById(userId);
       if (!user) {
-        window.location.href = "https://gaiamine.com/login";
+        window.location.href = "https://gaiamine.com/login?redirect=checkout";
         return;
       }
 
