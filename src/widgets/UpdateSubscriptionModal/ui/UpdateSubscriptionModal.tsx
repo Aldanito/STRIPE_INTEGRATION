@@ -74,7 +74,7 @@ export const UpdateSubscriptionModal = ({
               <div className="mt-3">
                 <div className="flex justify-between mt-2">
                   <span className="font-medium text-gray-300">New Plan:</span>
-                  <span className="text-gray-300">{`${plan?.title} ($${plan?.price})`}</span>
+                  <span className="text-gray-300">{`${plan?.title} (HK$${plan?.price})`}</span>
                 </div>
               </div>
               <p className="text-sm text-gray-300 mt-4">

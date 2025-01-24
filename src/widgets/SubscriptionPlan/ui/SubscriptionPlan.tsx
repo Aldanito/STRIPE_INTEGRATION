@@ -197,7 +197,7 @@ export const SubscriptionPlan = () => {
                 </p>
                 <div className="flex justify-center items-baseline my-8">
                   <span className="mr-2 text-5xl font-extrabold">
-                    ${item.price} HKD
+                    HK${item.price}
                   </span>
                   <span className="text-gray-500 dark:text-gray-400">
                     /{item.title === "Yearly" ? "year" : "month"}
@@ -211,18 +211,18 @@ export const SubscriptionPlan = () => {
                 <div className="mt-auto">
                   <button
                     className={`
-    inline-flex items-center justify-center w-full
-    ${
-      item.id === currentPlan
-        ? "bg-red-500 hover:bg-red-800"
-        : item.title === "Monthly" && currentPlanInterval === "year"
-        ? "bg-gray-500 cursor-not-allowed"
-        : "bg-green-600 hover:bg-green-800"
-    }
-    text-white 
-    focus:ring-4 focus:outline-none focus:ring-green-300 
-    font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-    transition duration-300 
+inline-flex items-center justify-center w-full
+${
+  item.id === currentPlan
+    ? "bg-gradient-to-r from-[#870E0E] to-[#CC1100] hover:opacity-90"
+    : item.title === "Monthly" && currentPlanInterval === "year"
+    ? "bg-gray-500 cursor-not-allowed"
+    : "bg-gradient-to-r from-[#1B3385] to-[#25C5C9] hover:opacity-90"
+}
+text-white 
+focus:ring-4 focus:outline-none focus:ring-green-300 
+font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+transition duration-300
   `}
                     onClick={() =>
                       item.id === currentPlan

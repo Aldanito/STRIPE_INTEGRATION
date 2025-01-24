@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GaiaMine checkout",
   description:
-    "Subscribe to GaiaMine's innovative solutions for sustainable mining. Choose from Basic, Advanced, and Premium plans to empower your mining operations.",
+    "Subscribe to GaiaMine's innovative solutions for sustainable mining. Choose from Monthly and Yearly plans to empower your mining operations.",
   icons: {
     icon: "/favicon.svg",
   },
